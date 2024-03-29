@@ -1,6 +1,6 @@
 import cors from "cors";
 import "dotenv/config";
-import express, { Application } from "express";
+import express, { Application, Request, Response } from "express";
 import { connectDb } from "./config/db.config";
 import myUserRoute from "./routes/user.route";
 
@@ -11,6 +11,10 @@ const app: Application = express(); // app initialized
 app.use(express.json());
 app.use(cors());
 app.use("/api/my/user", myUserRoute);
+
+app.get("/health", async (req: Request, res: Response) => {
+  res.status(200).json({ message: "OK!" });
+});
 
 // db connection
 connectDb();
