@@ -8,6 +8,7 @@ import { validateMyUserRequest } from "../dto/user.dto";
 
 const router: Router = express.Router();
 
+router.get("/", jwtCheck, jwtParse, getCurrentUser);
 router.post("/", jwtCheck, createCurrentUser);
 router.post("/", jwtCheck, jwtParse, validateMyUserRequest, updateCurrentUser);
 export default router;
