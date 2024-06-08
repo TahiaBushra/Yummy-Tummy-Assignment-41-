@@ -6,6 +6,7 @@ import myUserRoute from "./routes/user.route";
 import { connectCloudinary } from "./controllers/cloudinary.config";
 import myRestaurantRoute from "./routes/resstaurant.route";
 import publicRestaurantRoute from "./routes/restaurant.public.route";
+import orderRoutes from "./routes/order.route";
 
 // express api
 const app: Application = express(); // app initialized
@@ -16,6 +17,7 @@ app.use(cors());
 app.use("/api/my/user", myUserRoute);
 app.use("/api/my/restaurant", myRestaurantRoute);
 app.use("/api/restaurant", publicRestaurantRoute);
+app.use("/api/order", orderRoutes);
 
 app.get("/health", async (req: Request, res: Response) => {
   res.status(200).json({ message: "OK!" });
