@@ -36,6 +36,18 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
       checkoutSessionRequest,
       restaurant.menuItems
     );
+    const session = await createSession(
+      lineItems,
+      "TEST_ORDER_ID",
+      restaurant.deliveryPrice,
+      restaurant._id.toString()
+    );
+
+    if (!session.url) {
+      return res.status(500).json({ message: "Error creating stripe session" });
+    }
+
+    res.status(200).json({ url: session.url });
   } catch (error: any) {
     console.log(error);
     res.status(500).json({ message: error.raw.message });
@@ -70,4 +82,36 @@ function createLineItems(
   });
 
   return lineItems;
+}
+
+async function createSession(
+  lineItems: Stripe.Checkout.SessionCreateParams.LineItem[],
+  orderId: string,
+  deliveryPrice: number,
+  restaurantId: string
+) {
+  const sessionData = await stripe.checkout.sessions.create({
+    line_items: lineItems,
+    shipping_options: [
+      {
+        shipping_rate_data: {
+          display_name: "Regular Delivery",
+          type: "fixed_amount",
+          fixed_amount: {
+            amount: deliveryPrice,
+            currency: "USD",
+          },
+        },
+      },
+    ],
+    mode: "payment",
+    metadata: {
+      orderId,
+      restaurantId,
+    },
+    success_url: `${frontend_url}/order-status?success=true`,
+    cancel_url: `${frontend_url}/detail/${restaurantId}?cancelled=true`,
+  });
+
+  return sessionData;
 }
