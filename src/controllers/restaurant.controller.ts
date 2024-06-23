@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import Restaurant from "../models/restaurant.model";
-import cloudinary from "cloudinary";
 import mongoose from "mongoose";
+import Order from "../models/order.model";
+import Restaurant from "../models/restaurant.model";
 import { uploadImage } from "../utils/multer.util";
 
 export const createMyRestaurant = async (req: Request, res: Response) => {
